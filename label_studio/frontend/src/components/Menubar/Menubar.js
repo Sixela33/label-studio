@@ -204,7 +204,7 @@ export const Menubar = ({
 
                 <VersionNotifier showNewVersion/>
 
-                <Menu.Item
+                {/*<Menu.Item
                   label="API"
                   href="/docs/api"
                   icon={<IconTerminal/>}
@@ -227,7 +227,7 @@ export const Menubar = ({
                   href="https://slack.labelstud.io/?source=product-menu"
                   icon={<LsSlack/>}
                   target="_blank"
-                />
+                 />*/}
 
                 <VersionNotifier showCurrentVersion/>
 

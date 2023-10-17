@@ -4,7 +4,7 @@ import logging
 
 import drf_yasg.openapi as openapi
 from core.feature_flags import flag_set
-from core.permissions import ViewClassPermission, all_permissions
+from core.permissions import ViewClassPermission, all_permissions, admin_required
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
@@ -62,6 +62,10 @@ logger = logging.getLogger(__name__)
             ),
         ],
     ),
+)
+@method_decorator(
+    name='post',
+    decorator=admin_required
 )
 class MLBackendListAPI(generics.ListCreateAPIView):
     parser_classes = (JSONParser, FormParser, MultiPartParser)
@@ -131,6 +135,18 @@ class MLBackendListAPI(generics.ListCreateAPIView):
             host=(settings.HOSTNAME or 'https://localhost:8080')
         ),
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
+@method_decorator(
+    name='patch',
+    decorator=admin_required
+)
+@method_decorator(
+    name='delete',
+    decorator=admin_required
 )
 @method_decorator(name='put', decorator=swagger_auto_schema(auto_schema=None))
 class MLBackendDetailAPI(generics.RetrieveUpdateDestroyAPIView):
@@ -260,6 +276,10 @@ class MLBackendInteractiveAnnotating(APIView):
         operation_description='Get available versions of the model.',
         responses={'200': 'List of available versions.'},
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
 )
 class MLBackendVersionsAPI(generics.RetrieveAPIView):
 

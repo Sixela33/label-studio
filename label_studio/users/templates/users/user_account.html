@@ -35,15 +35,15 @@
         </li>
         <li class="field">
           <label for="">First Name</label>
-          <input type="text" class="ls-input" name="first_name" value="{{user.first_name}}" />
+          <input type="text" class="ls-input" name="first_name" value="{{user.first_name}}" disabled/>
         </li>
         <li class="field">
           <label for="">Last Name</label>
-          <input type="text" class="ls-input" name="last_name" value="{{user.last_name}}" />
+          <input type="text" class="ls-input" name="last_name" value="{{user.last_name}}" disabled/>
         </li>
         <li class="field">
           <label for="">Phone</label>
-          <input type="text" class="ls-input" name="phone" value="{{user.phone}}" />
+          <input type="text" class="ls-input" name="phone" value="{{user.phone}}" disabled/>
           <!-- <span>We'll send you sms with code if you change your number</span>
           <span class="error">Incorrect phone number!</span> -->
         </li>
@@ -82,7 +82,7 @@
       </footer>
     </form>
 
-    <!-- Token -->
+    <!-- Token 
     <form action="" class="access_token__info">
       <header>Access Token</header>
       <div class="field field--wide">
@@ -93,7 +93,7 @@
           <button type="button" class="blinking-status ls-button" name="renew">Renew</button>
         </p>
       </div>
-      <!-- Example -->
+      <-- Example 
       <div class="field field--wide">
         <label for="example_fetch">Example fetch projects data:</label>
         <textarea id="example_fetch" class="example_code ls-textarea" type="text" readonly
@@ -116,7 +116,7 @@
         </p>
       </div>
     </form>
-
+    -->
 
     <!-- Organization -->
     <form action="" class="organization block-info" id="organization">
@@ -142,7 +142,7 @@
 
     </form>
 
-    <!-- Notifications -->
+    <!-- Notifications 
     <form action="{% url 'user-detail' pk=user.pk %}?update-notifications=1" method="patch" class="notifications block-info" id="notifications">
       <header>
         Notifications
@@ -175,7 +175,7 @@
       </table>
 
     </form>
-
+    -->
 
   </div>
 

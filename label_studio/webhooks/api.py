@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from projects import models as project_models
 from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, admin_required
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -43,6 +43,10 @@ class WebhookFilterSet(django_filters.FilterSet):
         operation_description='Create a webhook for your organization.',
     ),
 )
+@method_decorator(
+    name='post',
+    decorator=admin_required
+)
 class WebhookListAPI(generics.ListCreateAPIView):
     queryset = Webhook.objects.all()
     serializer_class = WebhookSerializer
@@ -72,6 +76,10 @@ class WebhookListAPI(generics.ListCreateAPIView):
 )
 @method_decorator(
     name='delete', decorator=swagger_auto_schema(tags=['Webhooks'], operation_summary='Delete webhook info')
+)
+@method_decorator(
+    name='delete',
+    decorator=admin_required
 )
 class WebhookAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Webhook.objects.all()

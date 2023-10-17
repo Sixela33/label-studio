@@ -22,7 +22,7 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from label_studio.core.permissions import ViewClassPermission, all_permissions
+from label_studio.core.permissions import ViewClassPermission, all_permissions, admin_required
 from label_studio.core.utils.params import bool_from_request
 
 logger = logging.getLogger(__name__)
@@ -37,6 +37,11 @@ logger = logging.getLogger(__name__)
         Return a list of the organizations you've created or that you have access to.
         """,
     ),
+)
+
+@method_decorator(
+    name='post',
+    decorator=admin_required
 )
 class OrganizationListAPI(generics.ListCreateAPIView):
     queryset = Organization.objects.all()
@@ -142,6 +147,14 @@ class OrganizationMemberListAPI(generics.ListAPIView):
         operation_description='Update the settings for a specific organization by ID.',
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
+@method_decorator(
+    name='patch',
+    decorator=admin_required
+)
 class OrganizationAPI(generics.RetrieveUpdateAPIView):
 
     parser_classes = (JSONParser, FormParser, MultiPartParser)
@@ -172,6 +185,10 @@ class OrganizationAPI(generics.RetrieveUpdateAPIView):
         responses={200: OrganizationInviteSerializer()},
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class OrganizationInviteAPI(generics.RetrieveAPIView):
     parser_classes = (JSONParser,)
     queryset = Organization.objects.all()
@@ -195,6 +212,10 @@ class OrganizationInviteAPI(generics.RetrieveAPIView):
         operation_description='Reset the token used in the invitation link to invite someone to an organization.',
         responses={200: OrganizationInviteSerializer()},
     ),
+)
+@method_decorator(
+    name='post',
+    decorator=admin_required
 )
 class OrganizationResetTokenAPI(APIView):
     permission_required = all_permissions.organizations_invite

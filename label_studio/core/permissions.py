@@ -1,11 +1,15 @@
 """This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 """
-import logging   # noqa: I001
-from typing import Optional
+import logging
+
+from functools import wraps
+from rest_framework.response import Response
+from rest_framework import status
 
 from pydantic import BaseModel
 
 import rules
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -59,3 +63,17 @@ def make_perm(name, pred, overwrite=False):
 
 for _, permission_name in all_permissions:
     make_perm(permission_name, rules.is_authenticated)
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not is_admin(request.user):
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={'detail': 'You do not have permission to perform this action.'}
+            )
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view

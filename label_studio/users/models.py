@@ -17,6 +17,7 @@ from django.utils.translation import gettext_lazy as _
 from organizations.models import Organization
 from rest_framework.authtoken.models import Token
 from users.functions import hash_upload
+from django.contrib.auth.models import Group
 
 YEAR_START = 1980
 YEAR_CHOICES = []
@@ -41,6 +42,18 @@ class UserManagerWithDeleted(BaseUserManager):
 
         user.set_password(password)
         user.save(using=self._db)
+
+        grp, _ = Group.objects.get_or_create(name="Etiquetador")
+        user.groups.add(grp)
+
+        if Organization.objects.exists():
+            org = Organization.objects.first()
+            org.add_user(user)
+        else:
+            org = Organization.create_organization(created_by=user, title='Ramelax')
+
+        user.active_organization = org
+        user.save()
 
         return user
 
@@ -156,7 +169,7 @@ class User(UserMixin, AbstractBaseUser, PermissionsMixin, UserLastActivityMixin)
                 return settings.HOSTNAME + self.avatar.url
 
     def is_organization_admin(self, org_pk):
-        return True
+        return False
 
     def active_organization_annotations(self):
         return self.annotations.filter(project__organization=self.active_organization)

@@ -7,7 +7,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 from core.feature_flags import flag_set
-from core.permissions import all_permissions
+from core.permissions import all_permissions, admin_required
 from core.redis import start_job_async_or_sync
 from core.utils.common import batch
 from django.conf import settings
@@ -153,6 +153,10 @@ class ExportFormatsListAPI(generics.RetrieveAPIView):
         },
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class ExportAPI(generics.RetrieveAPIView):
     permission_required = all_permissions.projects_change
 
@@ -218,6 +222,10 @@ class ExportAPI(generics.RetrieveAPIView):
         """,
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class ProjectExportFiles(generics.RetrieveAPIView):
     permission_required = all_permissions.projects_change
     swagger_schema = None  # hide export files endpoint from swagger
@@ -239,7 +247,10 @@ class ProjectExportFiles(generics.RetrieveAPIView):
         items = [{'name': p.split('/')[2].split('.')[0], 'url': p} for p in sorted(paths)[::-1]]
         return Response({'export_files': items}, status=status.HTTP_200_OK)
 
-
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class ProjectExportFilesAuthCheck(APIView):
     """Check auth for nginx auth_request (/api/auth/export/)"""
 
@@ -296,6 +307,14 @@ class ProjectExportFilesAuthCheck(APIView):
             )
         ],
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
+@method_decorator(
+    name='post',
+    decorator=admin_required
 )
 class ExportListAPI(generics.ListCreateAPIView):
     queryset = Export.objects.all().order_by('-created_at')
@@ -394,6 +413,14 @@ class ExportListAPI(generics.ListCreateAPIView):
         ],
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
+@method_decorator(
+    name='delete',
+    decorator=admin_required
+)
 class ExportDetailAPI(generics.RetrieveDestroyAPIView):
     queryset = Export.objects.all()
     project_model = Project
@@ -468,6 +495,10 @@ class ExportDetailAPI(generics.RetrieveDestroyAPIView):
             ),
         ],
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
 )
 class ExportDownloadAPI(generics.RetrieveAPIView):
     queryset = Export.objects.all()
@@ -606,6 +637,14 @@ def set_convert_background_failure(job, connection, type, value, traceback_obj):
             ),
         ],
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
+@method_decorator(
+    name='post',
+    decorator=admin_required
 )
 class ExportConvertAPI(generics.RetrieveAPIView):
     queryset = Export.objects.all()

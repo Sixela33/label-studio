@@ -11,6 +11,7 @@ from rest_framework import generics
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from core.permissions import all_permissions, admin_required
 
 from label_studio.core.utils.common import load_func
 
@@ -50,6 +51,10 @@ _common_storage_list = _get_common_storage_list()
         responses={'200': "A list of import storages types {'name': name, 'title': title}."},
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class AllImportStorageTypesAPI(APIView):
     permission_required = all_permissions.projects_change
 
@@ -65,6 +70,10 @@ class AllImportStorageTypesAPI(APIView):
         operation_description='Retrieve a list of the export storages types.',
         responses={'200': "A list of export storages types {'name': name, 'title': title}."},
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
 )
 class AllExportStorageTypesAPI(APIView):
     permission_required = all_permissions.projects_change
@@ -89,6 +98,10 @@ class AllExportStorageTypesAPI(APIView):
         ],
         responses={200: 'List of ImportStorageSerializer'},
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
 )
 class AllImportStorageListAPI(generics.ListAPIView):
 
@@ -130,6 +143,10 @@ class AllImportStorageListAPI(generics.ListAPIView):
         ],
         responses={200: 'List of ExportStorageSerializer'},
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
 )
 class AllExportStorageListAPI(generics.ListAPIView):
 

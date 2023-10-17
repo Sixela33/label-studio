@@ -8,7 +8,7 @@ import drf_yasg.openapi as openapi
 from core.filters import ListFilter
 from core.label_config import config_essential_data_has_changed
 from core.mixins import GetParentObjectMixin
-from core.permissions import ViewClassPermission, all_permissions
+from core.permissions import all_permissions, ViewClassPermission, admin_required
 from core.utils.common import paginator, paginator_help, temporary_disconnect_all_signals
 from core.utils.exceptions import LabelStudioDatabaseException, ProjectExistException
 from core.utils.io import find_dir, find_file, read_yaml
@@ -131,6 +131,10 @@ class ProjectFilterSet(FilterSet):
         ),
     ),
 )
+@method_decorator(
+    name='post',
+    decorator=admin_required
+)
 class ProjectListAPI(generics.ListCreateAPIView):
     parser_classes = (JSONParser, FormParser, MultiPartParser)
     serializer_class = ProjectSerializer
@@ -202,6 +206,18 @@ class ProjectListAPI(generics.ListCreateAPIView):
         request_body=ProjectSerializer,
     ),
 )
+@method_decorator(
+    name='delete',
+    decorator=admin_required
+)
+@method_decorator(
+    name='patch',
+    decorator=admin_required
+)
+@method_decorator(
+    name='put',
+    decorator=admin_required
+)
 class ProjectAPI(generics.RetrieveUpdateDestroyAPIView):
 
     parser_classes = (JSONParser, FormParser, MultiPartParser)
@@ -270,6 +286,10 @@ class ProjectAPI(generics.RetrieveUpdateDestroyAPIView):
         responses={200: TaskWithAnnotationsAndPredictionsAndDraftsSerializer()},
     ),
 )  # leaving this method decorator info in case we put it back in swagger API docs
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class ProjectNextTaskAPI(generics.RetrieveAPIView):
 
     permission_required = all_permissions.tasks_view
@@ -362,6 +382,10 @@ class LabelConfigValidateAPI(generics.CreateAPIView):
         request_body=ProjectLabelConfigSerializer,
     ),
 )
+@method_decorator(
+    name='post',
+    decorator=admin_required
+)
 class ProjectLabelConfigValidateAPI(generics.RetrieveAPIView):
     """Validate label config"""
 
@@ -413,6 +437,10 @@ class ProjectSummaryAPI(generics.RetrieveAPIView):
         ],
     ),
 )
+@method_decorator(
+    name='get',
+    decorator=admin_required
+)
 class ProjectImportAPI(generics.RetrieveAPIView):
     parser_classes = (JSONParser,)
     serializer_class = ProjectImportSerializer
@@ -436,6 +464,10 @@ class ProjectImportAPI(generics.RetrieveAPIView):
             ),
         ],
     ),
+)
+@method_decorator(
+    name='get',
+    decorator=admin_required
 )
 class ProjectReimportAPI(generics.RetrieveAPIView):
     parser_classes = (JSONParser,)
@@ -484,6 +516,10 @@ class ProjectReimportAPI(generics.RetrieveAPIView):
         ]
         + paginator_help('tasks', 'Projects')['manual_parameters'],
     ),
+)
+@method_decorator(
+    name='delete',
+    decorator=admin_required
 )
 class ProjectTaskListAPI(GetParentObjectMixin, generics.ListCreateAPIView, generics.DestroyAPIView):
 

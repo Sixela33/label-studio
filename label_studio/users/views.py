@@ -5,7 +5,7 @@ import logging
 import drf_yasg.openapi as openapi
 from core.feature_flags import flag_set
 from core.middleware import enforce_csrf_checks
-from core.permissions import all_permissions
+from core.permissions import all_permissions, admin_required
 from core.utils.common import load_func
 from django.conf import settings
 from django.contrib import auth
@@ -24,6 +24,7 @@ from rest_framework.response import Response
 from users import forms
 from users.functions import login, proceed_registration
 from users.models import User
+from django.utils.decorators import method_decorator
 
 HasObjectPermission = load_func(settings.USER_PERM)
 
@@ -59,7 +60,7 @@ def user_signup(request):
         return redirect(next_page)
 
     # make a new user
-    if request.method == 'POST':
+    '''if request.method == 'POST':
         organization = Organization.objects.first()
         if settings.DISABLE_SIGNUP_WITHOUT_LINK is True:
             if not (token and organization and token == organization.token):
@@ -74,7 +75,7 @@ def user_signup(request):
         if user_form.is_valid():
             redirect_response = proceed_registration(request, user_form, organization_form, next_page)
             if redirect_response:
-                return redirect_response
+                return redirect_response'''
 
     if flag_set('fflag_feat_front_lsdv_e_297_increase_oss_to_enterprise_adoption_short'):
         return render(
@@ -161,6 +162,10 @@ def user_account(request):
     )
 
 
+@method_decorator(
+    name='delete',
+    decorator=admin_required
+)
 class UserSoftDeleteView(views.APIView):
     permission_classes = (IsAuthenticated, HasObjectPermission)
     permission_required = all_permissions.organizations_change

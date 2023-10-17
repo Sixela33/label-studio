@@ -17,7 +17,6 @@ stages:
     url: '{django_live_url}/api/users'
   response:
     status_code: 200
-
 - name: stage
   request:
     method: GET
@@ -27,7 +26,6 @@ stages:
     save:
       json:
         org_pk: active_organization
-
 - name: stage
   request:
     json:
@@ -41,14 +39,12 @@ stages:
       json:
         new_user_pk: id
     status_code: 201
-
 - name: stage
   request:
     method: GET
     url: '{django_live_url}/api/users/{new_user_pk}'
   response:
     status_code: 200
-
 - name: attempt_update_email_raises_405
   request:
     url: "{django_live_url}/api/users/{new_user_pk}"
@@ -78,7 +74,6 @@ stages:
       status_code: 302
       headers:
         location: "/projects/" # redirect to projects page rather than malicious.com
-
   - name: malicious_login
     request:
       url: "{django_live_url}/user/login?next=http://malicious.com"

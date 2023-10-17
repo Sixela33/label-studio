@@ -65,14 +65,15 @@ def save_user(request, next_page, user_form):
         org = Organization.objects.first()
         org.add_user(user)
     else:
-        org = Organization.create_organization(created_by=user, title='Label Studio')
+        org = Organization.create_organization(created_by=user, title='Ramelax')
+        
     user.active_organization = org
     user.save(update_fields=['active_organization'])
 
     request.advanced_json = {
         'email': user.email,
         'allow_newsletters': user.allow_newsletters,
-        'update-notifications': 1,
+        'update-notifications': 0,
         'new-user': 1,
     }
     redirect_url = next_page if next_page else reverse('projects:project-index')
