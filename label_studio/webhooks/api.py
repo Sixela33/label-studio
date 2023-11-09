@@ -5,9 +5,11 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from projects import models as project_models
 from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAuthenticated, admin_required
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from core.permissions import admin_required
+
 
 from .models import Webhook, WebhookAction
 from .serializers import WebhookSerializer, WebhookSerializerForUpdate

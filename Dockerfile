@@ -81,6 +81,8 @@ RUN python3 label_studio/manage.py collectstatic --no-input && \
 
 ENV HOME=/label-studio
 
+#RUN --chown=1001:0 /var/lib/postgresql/data
+
 EXPOSE 8080
 
 USER 1001
