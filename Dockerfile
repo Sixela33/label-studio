@@ -75,7 +75,7 @@ RUN --mount=type=cache,target=$PIP_CACHE_DIR,uid=1001,gid=0 \
 RUN rm -rf ./label_studio/frontend
 COPY --chown=1001:0 --from=frontend-builder /label-studio/label_studio/frontend/dist ./label_studio/frontend/dist
 
-RUN sudo python3 label_studio/manage.py collectstatic --no-input && \
+RUN python3 label_studio/manage.py collectstatic --no-input && \
     chown -R 1001:0 $LS_DIR && \
     chmod -R g=u $LS_DIR
 
