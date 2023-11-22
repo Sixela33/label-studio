@@ -23,7 +23,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LS_DIR=/label-studio \
     PIP_CACHE_DIR=$HOME/.cache \
     DJANGO_SETTINGS_MODULE=core.settings.label_studio \
-    LABEL_STUDIO_BASE_DATA_DIR=/label-studio/data \
+    LABEL_STUDIO_BASE_DATA_DIR=/label-studio/dataa \
     OPT_DIR=/opt/heartex/instance-data/etc \
     SETUPTOOLS_USE_DISTUTILS=stdlib
 
@@ -75,11 +75,13 @@ RUN --mount=type=cache,target=$PIP_CACHE_DIR,uid=1001,gid=0 \
 RUN rm -rf ./label_studio/frontend
 COPY --chown=1001:0 --from=frontend-builder /label-studio/label_studio/frontend/dist ./label_studio/frontend/dist
 
-RUN python3 label_studio/manage.py collectstatic --no-input && \
+RUN sudo python3 label_studio/manage.py collectstatic --no-input && \
     chown -R 1001:0 $LS_DIR && \
     chmod -R g=u $LS_DIR
 
+
 ENV HOME=/label-studio
+
 
 #RUN --chown=1001:0 /var/lib/postgresql/data
 
