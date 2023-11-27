@@ -73,7 +73,7 @@ def admin_required(view_func):
         if not is_admin(request.user):
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
-                data={'detail': 'You do not have permission to perform this action.'}
+                data={'detail': ''}
             )
         return view_func(request, *args, **kwargs)
     return _wrapped_view
